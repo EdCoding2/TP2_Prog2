@@ -1,0 +1,464 @@
+/* =========================================================
+   DARK MODE — Bibliothèque Cégep
+   ========================================================= */
+
+/* Polices et base */
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-background-color: #1e1e2e;
+}
+
+/* =========================================================
+   ROOT PANE
+   ========================================================= */
+.root-pane {
+    -fx-background-color: #1e1e2e;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.header {
+    -fx-background-color: #181825;
+    -fx-border-color: #313244;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cdd6f4;
+}
+
+.counter-label {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6c7086;
+}
+
+.counter-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #89b4fa;
+}
+
+/* =========================================================
+   BOUTON FERMER
+   ========================================================= */
+.btn-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6c7086;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 4 10 4 10;
+    -fx-background-radius: 6;
+}
+
+.btn-close:hover {
+    -fx-background-color: #f38ba8;
+    -fx-text-fill: #1e1e2e;
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+.navbar {
+    -fx-background-color: #181825;
+    -fx-border-color: #313244;
+    -fx-border-width: 0 0 1 0;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #a6adc8;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 7 16 7 16;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.nav-button:hover {
+    -fx-background-color: #313244;
+    -fx-text-fill: #cdd6f4;
+}
+
+.nav-button-save {
+    -fx-background-color: #a6e3a1;
+    -fx-text-fill: #1e1e2e;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 7 16 7 16;
+    -fx-background-radius: 6;
+}
+
+.nav-button-save:hover {
+    -fx-background-color: #94e2a1;
+}
+
+/* =========================================================
+   CONTENU PRINCIPAL + SCROLL
+   ========================================================= */
+.main-scroll {
+    -fx-background-color: #1e1e2e;
+    -fx-background: #1e1e2e;
+}
+
+.main-scroll .viewport {
+    -fx-background-color: #1e1e2e;
+}
+
+.main-content {
+    -fx-background-color: #1e1e2e;
+    -fx-min-height: 600px;
+}
+
+/* =========================================================
+   PANNEAU RÉPARATIONS
+   ========================================================= */
+.repair-panel {
+    -fx-background-color: #181825;
+    -fx-border-color: #313244;
+    -fx-border-width: 1 0 0 0;
+}
+
+.repair-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #fab387;
+}
+
+.repair-count {
+    -fx-font-weight: bold;
+    -fx-text-fill: #f38ba8;
+}
+
+.repair-list {
+    -fx-background-color: #1e1e2e;
+    -fx-control-inner-background: #1e1e2e;
+    -fx-border-color: #313244;
+}
+
+.repair-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cdd6f4;
+    -fx-font-size: 12px;
+}
+
+/* =========================================================
+   TABLEVIEW
+   ========================================================= */
+.table-view {
+    -fx-background-color: #181825;
+    -fx-control-inner-background: #181825;
+    -fx-border-color: #313244;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #11111b;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: #313244;
+    -fx-border-width: 0 1 0 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #89b4fa;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #181825;
+    -fx-border-color: transparent transparent #313244 transparent;
+    -fx-text-fill: #cdd6f4;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: #1e1e2e;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #313244;
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #45475a;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: #cdd6f4;
+    -fx-border-color: transparent;
+}
+
+.table-view .placeholder .label {
+    -fx-text-fill: #6c7086;
+    -fx-font-style: italic;
+}
+
+/* =========================================================
+   LISTVIEW
+   ========================================================= */
+.list-view {
+    -fx-background-color: #181825;
+    -fx-control-inner-background: #181825;
+    -fx-border-color: #313244;
+    -fx-border-radius: 6;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cdd6f4;
+}
+
+.list-cell:hover {
+    -fx-background-color: #313244;
+}
+
+.list-cell:selected {
+    -fx-background-color: #45475a;
+}
+
+/* =========================================================
+   BOUTONS
+   ========================================================= */
+.btn-primary {
+    -fx-background-color: #89b4fa;
+    -fx-text-fill: #1e1e2e;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 18 8 18;
+    -fx-background-radius: 6;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #74c7ec;
+}
+
+.btn-secondary {
+    -fx-background-color: #45475a;
+    -fx-text-fill: #cdd6f4;
+    -fx-cursor: hand;
+    -fx-padding: 8 18 8 18;
+    -fx-background-radius: 6;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #585b70;
+}
+
+.btn-danger {
+    -fx-background-color: #f38ba8;
+    -fx-text-fill: #1e1e2e;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8 18 8 18;
+    -fx-background-radius: 6;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #eb6f92;
+}
+
+/* =========================================================
+   TEXTFIELD / COMBOBOX
+   ========================================================= */
+.text-field, .combo-box {
+    -fx-background-color: #313244;
+    -fx-text-fill: #cdd6f4;
+    -fx-prompt-text-fill: #6c7086;
+    -fx-border-color: #45475a;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10 6 10;
+}
+
+.text-field:focused, .combo-box:focused {
+    -fx-border-color: #89b4fa;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #313244;
+    -fx-text-fill: #cdd6f4;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #313244;
+    -fx-border-color: #45475a;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #45475a;
+}
+
+/* =========================================================
+   LABEL MESSAGES
+   ========================================================= */
+.message-error {
+    -fx-text-fill: #f38ba8;
+    -fx-font-size: 12px;
+}
+
+.info-label {
+    -fx-text-fill: #89b4fa;
+    -fx-font-weight: bold;
+}
+
+.section-title {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cdd6f4;
+}
+
+.detail-value {
+    -fx-text-fill: #a6e3a1;
+    -fx-font-weight: bold;
+}
+
+/* =========================================================
+   TITLEDPANE
+   ========================================================= */
+.titled-pane {
+    -fx-text-fill: #cdd6f4;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #313244;
+    -fx-border-color: #45475a;
+    -fx-border-radius: 6 6 0 0;
+}
+
+.titled-pane > .title > .text {
+    -fx-fill: #cdd6f4;
+    -fx-font-weight: bold;
+}
+
+.titled-pane > .content {
+    -fx-background-color: #1e1e2e;
+    -fx-border-color: #45475a;
+    -fx-border-radius: 0 0 6 6;
+}
+
+.form-pane > .title {
+    -fx-background-color: #11111b;
+}
+
+/* =========================================================
+   TABPANE
+   ========================================================= */
+.tab-pane {
+    -fx-background-color: #1e1e2e;
+    -fx-tab-min-height: 36px;
+}
+
+.tab-pane .tab-header-area {
+    -fx-background-color: #181825;
+    -fx-border-color: #313244;
+    -fx-border-width: 0 0 1 0;
+}
+
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 16 6 16;
+    -fx-cursor: hand;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: #6c7086;
+    -fx-font-size: 13px;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #313244;
+    -fx-border-color: #89b4fa;
+    -fx-border-width: 0 0 2 0;
+}
+
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: #cdd6f4;
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab:hover .tab-label {
+    -fx-text-fill: #cdd6f4;
+}
+
+.tab-pane .tab-content-area {
+    -fx-background-color: #1e1e2e;
+}
+
+/* =========================================================
+   RADIO BUTTON
+   ========================================================= */
+.radio-button {
+    -fx-text-fill: #cdd6f4;
+    -fx-cursor: hand;
+}
+
+.radio-button .radio {
+    -fx-border-color: #45475a;
+    -fx-background-color: #313244;
+}
+
+.radio-button:selected .radio {
+    -fx-border-color: #89b4fa;
+    -fx-background-color: #89b4fa;
+}
+
+/* =========================================================
+   SEARCH PANEL
+   ========================================================= */
+.search-panel {
+    -fx-background-color: #181825;
+    -fx-border-color: #313244;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 15;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+.scroll-bar {
+    -fx-background-color: #1e1e2e;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #181825;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #45475a;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #585b70;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+/* =========================================================
+   LABEL GÉNÉRAL
+   ========================================================= */
+.label {
+    -fx-text-fill: #cdd6f4;
+}
+
+/* =========================================================
+   FIELD READONLY
+   ========================================================= */
+.field-readonly {
+    -fx-background-color: #11111b;
+    -fx-text-fill: #6c7086;
+}

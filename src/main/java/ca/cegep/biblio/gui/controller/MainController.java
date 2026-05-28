@@ -99,7 +99,16 @@ public class MainController implements Initializable {
                 .toList()
         );
     }
-
+    @FXML
+    private void fermerApplication() {
+        // Sauvegarde avant fermeture
+        service.sauvegarderDonnees();
+        if (App.getRepairScheduler() != null) {
+            App.getRepairScheduler().arreter();
+        }
+        arreterScheduler();
+        javafx.application.Platform.exit();
+    }
     // -------------------------------------------------------------------------
     // Chargement dynamique des vues
     // -------------------------------------------------------------------------

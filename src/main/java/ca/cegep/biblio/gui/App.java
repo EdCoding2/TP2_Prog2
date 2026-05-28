@@ -17,31 +17,25 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // Initialiser le service principal
         bibliothequeService = new BibliothequeService();
-
-        // Charger les données sauvegardées
         bibliothequeService.chargerDonnees();
 
-        // Démarrer le scheduler de réparation
         repairScheduler = new RepairScheduler(bibliothequeService);
         repairScheduler.demarrer();
 
-        // Charger la vue principale
         FXMLLoader loader = new FXMLLoader(
                 App.class.getResource("/ca/cegep/biblio/gui/view/main.fxml")
         );
-        Scene scene = new Scene(loader.load(), 1200, 800);
+        Scene scene = new Scene(loader.load());
 
-        // Appliquer le CSS
         scene.getStylesheets().add(
                 App.class.getResource("/styles.css").toExternalForm()
         );
 
+        // Plein écran maximisé au démarrage
+        stage.setMaximized(true);
         stage.setTitle("Bibliothèque — Cégep");
         stage.setScene(scene);
-        stage.setMinWidth(900);
-        stage.setMinHeight(600);
         stage.show();
     }
 

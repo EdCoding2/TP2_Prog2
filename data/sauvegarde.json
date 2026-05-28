@@ -1,5 +1,14 @@
 {
-  "exemplaires": [],
+  "exemplaires": [
+    {
+      "idExemplaire": "EX-CC5E92F0",
+      "titre": "eduarfsamoi",
+      "auteur": "s affs moi",
+      "isbn": "2134sfmoi",
+      "statut": "DISPONIBLE",
+      "etatPhysique": "NEUF"
+    }
+  ],
   "usagers": [],
   "emprunts": []
 }
