@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ca.cegep.biblio.gui.controller.EmpruntController"
+      spacing="15">
+
+    <!-- ONGLETS EMPRUNT / RETOUR -->
+    <TabPane fx:id="tabPane" VBox.vgrow="ALWAYS">
+
+        <!-- ONGLET EMPRUNTS EN COURS -->
+        <Tab text="📋 Emprunts en cours" closable="false">
+            <VBox spacing="10">
+                <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+                <TableView fx:id="empruntTableView" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colUsagerNom"   text="Usager"         prefWidth="180"/>
+                        <TableColumn fx:id="colTitre"       text="Titre"          prefWidth="250"/>
+                        <TableColumn fx:id="colIsbn"        text="ISBN"           prefWidth="150"/>
+                        <TableColumn fx:id="colDateEmprunt" text="Date emprunt"   prefWidth="130"/>
+                        <TableColumn fx:id="colDateRetour"  text="Retour prévu"   prefWidth="130"/>
+                        <TableColumn fx:id="colRetard"      text="En retard"      prefWidth="100"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun emprunt en cours."/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+
+        <!-- ONGLET NOUVEL EMPRUNT -->
+        <Tab text="➕ Nouvel emprunt" closable="false">
+            <VBox spacing="15">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <GridPane hgap="15" vgap="12">
+                    <Label text="Usager :"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="usagerEmpruntCombo" prefWidth="350"
+                              GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="ISBN :"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="isbnEmpruntField" prefWidth="350"
+                               promptText="Entrer l'ISBN..."
+                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="Disponibilité :"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <Label fx:id="disponibiliteLabel" text="—"
+                           GridPane.columnIndex="1" GridPane.rowIndex="2"
+                           styleClass="info-label"/>
+                </GridPane>
+
+                <Button text="✅ Confirmer l'emprunt" onAction="#confirmerEmprunt"
+                        styleClass="btn-primary"/>
+                <Label fx:id="messageEmpruntLabel" styleClass="message-error"/>
+            </VBox>
+        </Tab>
+
+        <!-- ONGLET RETOUR -->
+        <Tab text="🔄 Retour" closable="false">
+            <VBox spacing="15">
+                <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+                <GridPane hgap="15" vgap="12">
+                    <Label text="Usager :"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="usagerRetourCombo" prefWidth="350"
+                              onAction="#chargerEmpruntsUsager"
+                              GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                    <Label text="Exemplaire :"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <ComboBox fx:id="exemplaireRetourCombo" prefWidth="350"
+                              GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                    <Label text="État physique :"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                    <ComboBox fx:id="etatRetourCombo" prefWidth="350"
+                              GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                </GridPane>
+
+                <Button text="✅ Confirmer le retour" onAction="#confirmerRetour"
+                        styleClass="btn-primary"/>
+                <Label fx:id="messageRetourLabel" styleClass="message-error"/>
+            </VBox>
+        </Tab>
+
+        <!-- ONGLET EMPRUNTS EN RETARD -->
+        <Tab text="⚠️ En retard" closable="false">
+            <VBox spacing="10">
+                <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="Emprunts dont la date de retour est dépassée :"
+                           styleClass="section-title"/>
+                    <Button text="🔄 Rafraîchir" onAction="#rafraichirRetards"
+                            styleClass="btn-secondary"/>
+                </HBox>
+
+                <TableView fx:id="retardTableView" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colRetardUsager" text="Usager"       prefWidth="180"/>
+                        <TableColumn fx:id="colRetardTitre"  text="Titre"        prefWidth="250"/>
+                        <TableColumn fx:id="colRetardDate"   text="Retour prévu" prefWidth="130"/>
+                        <TableColumn fx:id="colRetardJours"  text="Jours retard" prefWidth="120"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun emprunt en retard. ✅"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+
+    </TabPane>
+
+</VBox>
