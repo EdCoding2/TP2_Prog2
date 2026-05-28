@@ -1,8 +1,12 @@
-// module com.example.tp {
-//     requires javafx.controls;
-//     requires javafx.fxml;
+module ca.cegep.biblio {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires com.google.gson;
 
+    opens ca.cegep.biblio.persistence to com.google.gson;
+    opens ca.cegep.biblio.model to com.google.gson;
+    opens ca.cegep.biblio.gui.controller to javafx.fxml;
+    opens ca.cegep.biblio.gui to javafx.fxml;
 
-//     opens com.example.tp to javafx.fxml;
-//     exports com.example.tp;
-// }
+    exports ca.cegep.biblio.gui;
+}

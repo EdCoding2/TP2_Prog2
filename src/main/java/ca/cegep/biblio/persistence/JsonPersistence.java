@@ -2,7 +2,6 @@ package ca.cegep.biblio.persistence;
 
 import ca.cegep.biblio.model.*;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -18,10 +17,19 @@ public class JsonPersistence {
     public JsonPersistence() {
         this.gson = new GsonBuilder()
                 // Adaptateur pour LocalDate
-                .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>)
-                        (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
-                .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>)
-                        (json, typeOfT, context) -> LocalDate.parse(json.getAsString()))
+                .registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
+                    @Override
+                    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+                        return new JsonPrimitive(src.toString());
+                    }
+                })
+                .registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
+                    @Override
+                    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                            throws JsonParseException {
+                        return LocalDate.parse(json.getAsString());
+                    }
+                })
                 // Adaptateur pour le polymorphisme Usager
                 .registerTypeAdapter(Usager.class, new UsagerAdapter())
                 .setPrettyPrinting()
@@ -135,12 +143,15 @@ public class JsonPersistence {
             JsonObject obj = json.getAsJsonObject();
             String type = obj.get(TYPE_FIELD).getAsString();
 
-            return switch (type) {
-                case "Etudiant"   -> context.deserialize(obj, Etudiant.class);
-                case "Professeur" -> context.deserialize(obj, Professeur.class);
-                case "Visiteur"   -> context.deserialize(obj, Visiteur.class);
-                default -> throw new JsonParseException("Type usager inconnu : " + type);
-            };
+            if ("Etudiant".equals(type)) {
+                return context.deserialize(obj, Etudiant.class);
+            } else if ("Professeur".equals(type)) {
+                return context.deserialize(obj, Professeur.class);
+            } else if ("Visiteur".equals(type)) {
+                return context.deserialize(obj, Visiteur.class);
+            } else {
+                throw new JsonParseException("Type usager inconnu : " + type);
+            }
         }
     }
 }
