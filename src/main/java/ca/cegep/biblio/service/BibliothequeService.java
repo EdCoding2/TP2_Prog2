@@ -6,6 +6,8 @@ import ca.cegep.biblio.persistence.JsonPersistence;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BibliothequeService {
 
@@ -184,4 +186,11 @@ public class BibliothequeService {
     public List<Exemplaire> getExemplaires()  { return exemplaires; }
     public List<Usager> getUsagers()          { return usagers; }
     public List<Emprunt> getEmprunts()        { return emprunts; }
+    public Map<String, Long> getStatistiquesParTypeUsager() {
+        return emprunts.stream()
+                .collect(Collectors.groupingBy(
+                        e -> e.getUsager().getClass().getSimpleName(),
+                        Collectors.counting()
+                ));
+    }
 }
