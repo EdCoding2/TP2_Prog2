@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ca.cegep.biblio.gui.controller.LivreController"
+      spacing="15">
+
+    <!-- BARRE D'OUTILS -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="➕ Ajouter"     onAction="#ajouterExemplaire"
+                styleClass="btn-primary"/>
+        <Button text="✏️ Modifier"    onAction="#modifierExemplaire"
+                styleClass="btn-secondary"/>
+        <Button text="🗑️ Supprimer"  onAction="#supprimerExemplaire"
+                styleClass="btn-danger"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="rechercheLivreField"
+                   promptText="Filtrer par titre..."
+                   prefWidth="250"
+                   onKeyReleased="#filtrerTableau"/>
+    </HBox>
+
+    <!-- TABLEAU DES EXEMPLAIRES -->
+    <TableView fx:id="livreTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colTitre"    text="Titre"        prefWidth="280"/>
+            <TableColumn fx:id="colAuteur"   text="Auteur"       prefWidth="200"/>
+            <TableColumn fx:id="colIsbn"     text="ISBN"         prefWidth="160"/>
+            <TableColumn fx:id="colStatut"   text="Statut"       prefWidth="120"/>
+            <TableColumn fx:id="colEtat"     text="État"         prefWidth="100"/>
+            <TableColumn fx:id="colDispo"    text="Dispo le"     prefWidth="110"/>
+        </columns>
+        <placeholder>
+            <Label text="Aucun exemplaire dans le catalogue."/>
+        </placeholder>
+    </TableView>
+
+    <!-- FORMULAIRE AJOUT / MODIFICATION -->
+    <TitledPane fx:id="formulairePane" text="Détails de l'exemplaire"
+                expanded="false" styleClass="form-pane">
+        <GridPane hgap="15" vgap="10">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+            <Label text="Titre :"   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="titreField" prefWidth="300"
+                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Auteur :"  GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="auteurField" prefWidth="300"
+                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="ISBN :"    GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="isbnField" prefWidth="300"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="État :"    GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <ComboBox fx:id="etatCombo" prefWidth="300"
+                      GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="Statut :"  GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="statutCombo" prefWidth="300"
+                      GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                <Button text="✅ Confirmer" onAction="#confirmerFormulaire"
+                        styleClass="btn-primary"/>
+                <Button text="❌ Annuler"   onAction="#annulerFormulaire"
+                        styleClass="btn-secondary"/>
+            </HBox>
+        </GridPane>
+    </TitledPane>
+
+    <!-- MESSAGE D'ERREUR -->
+    <Label fx:id="messageLabel" styleClass="message-error"/>
+
+</VBox>
