@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ca.cegep.biblio.gui.controller.UsagerController"
+      spacing="15">
+
+    <!-- BARRE D'OUTILS -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="➕ Ajouter"    onAction="#ajouterUsager"
+                styleClass="btn-primary"/>
+        <Button text="✏️ Modifier"   onAction="#modifierUsager"
+                styleClass="btn-secondary"/>
+        <Button text="🗑️ Supprimer" onAction="#supprimerUsager"
+                styleClass="btn-danger"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="rechercheUsagerField"
+                   promptText="Filtrer par nom..."
+                   prefWidth="250"
+                   onKeyReleased="#filtrerTableau"/>
+    </HBox>
+
+    <!-- TABLEAU DES USAGERS -->
+    <TableView fx:id="usagerTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colNom"       text="Nom"            prefWidth="200"/>
+            <TableColumn fx:id="colId"        text="ID"             prefWidth="130"/>
+            <TableColumn fx:id="colType"      text="Type"           prefWidth="120"/>
+            <TableColumn fx:id="colEmprunts"  text="Emprunts actifs" prefWidth="130"/>
+            <TableColumn fx:id="colMax"       text="Max livres"     prefWidth="100"/>
+            <TableColumn fx:id="colDuree"     text="Durée (jours)"  prefWidth="120"/>
+        </columns>
+        <placeholder>
+            <Label text="Aucun usager enregistré."/>
+        </placeholder>
+    </TableView>
+
+    <!-- FORMULAIRE AJOUT / MODIFICATION -->
+    <TitledPane fx:id="formulairePane" text="Détails de l'usager"
+                expanded="false" styleClass="form-pane">
+        <GridPane hgap="15" vgap="10">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+            <Label text="Nom :"  GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="nomField" prefWidth="300"
+                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Type :" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <ComboBox fx:id="typeCombo" prefWidth="300"
+                      GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <!-- Champ ID visible seulement en modification -->
+            <Label fx:id="idLabel" text="ID :"
+                   GridPane.columnIndex="0" GridPane.rowIndex="2"
+                   visible="false"/>
+            <TextField fx:id="idField" prefWidth="300"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"
+                       editable="false" visible="false"
+                       styleClass="field-readonly"/>
+
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Button text="✅ Confirmer" onAction="#confirmerFormulaire"
+                        styleClass="btn-primary"/>
+                <Button text="❌ Annuler"   onAction="#annulerFormulaire"
+                        styleClass="btn-secondary"/>
+            </HBox>
+        </GridPane>
+    </TitledPane>
+
+    <!-- PANNEAU EMPRUNTS EN COURS DE L'USAGER SÉLECTIONNÉ -->
+    <TitledPane text="Emprunts en cours de l'usager sélectionné"
+                expanded="false" styleClass="form-pane">
+        <ListView fx:id="empruntsUsagerListView" prefHeight="150"/>
+    </TitledPane>
+
+    <!-- MESSAGE -->
+    <Label fx:id="messageLabel" styleClass="message-error"/>
+
+</VBox>
