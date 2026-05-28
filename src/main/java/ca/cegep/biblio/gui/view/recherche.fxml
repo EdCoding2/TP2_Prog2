@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ca.cegep.biblio.gui.controller.RechercheController"
+      spacing="15">
+
+    <!-- BARRE DE RECHERCHE -->
+    <VBox styleClass="search-panel" spacing="10">
+        <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+        <Label text="🔍 Recherche de livres" styleClass="section-title"/>
+
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <!-- Type de recherche -->
+            <VBox spacing="5">
+                <Label text="Rechercher par :"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <RadioButton fx:id="radioTitre"  text="Titre"
+                                 onAction="#changerTypeRecherche"/>
+                    <RadioButton fx:id="radioAuteur" text="Auteur"
+                                 onAction="#changerTypeRecherche"/>
+                    <RadioButton fx:id="radioIsbn"   text="ISBN"
+                                 onAction="#changerTypeRecherche"/>
+                </HBox>
+            </VBox>
+
+            <!-- Champ de recherche -->
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Termes de recherche :"/>
+                <HBox spacing="10">
+                    <TextField fx:id="rechercheField"
+                               promptText="Entrer le terme de recherche..."
+                               HBox.hgrow="ALWAYS"
+                               onKeyReleased="#rechercherEnTempsReel"/>
+                    <Button text="🔍 Rechercher" onAction="#rechercher"
+                            styleClass="btn-primary"/>
+                    <Button text="🗑️ Effacer" onAction="#effacer"
+                            styleClass="btn-secondary"/>
+                </HBox>
+            </VBox>
+        </HBox>
+
+        <!-- Résumé des résultats -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Résultats :"/>
+            <Label fx:id="nbResultatsLabel" text="—" styleClass="info-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Tri : alphabétique" styleClass="info-label"/>
+        </HBox>
+    </VBox>
+
+    <!-- TABLEAU DES RÉSULTATS -->
+    <TableView fx:id="resultatsTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colTitre"       text="Titre"        prefWidth="280"/>
+            <TableColumn fx:id="colAuteur"      text="Auteur"       prefWidth="200"/>
+            <TableColumn fx:id="colIsbn"        text="ISBN"         prefWidth="160"/>
+            <TableColumn fx:id="colStatut"      text="Statut"       prefWidth="120"/>
+            <TableColumn fx:id="colEtat"        text="État"         prefWidth="100"/>
+            <TableColumn fx:id="colDisponible"  text="Disponible ?" prefWidth="110"/>
+            <TableColumn fx:id="colRetourProche" text="Prochain retour" prefWidth="130"/>
+        </columns>
+        <placeholder>
+            <Label text="Effectuez une recherche pour afficher les résultats."/>
+        </placeholder>
+    </TableView>
+
+    <!-- PANNEAU DE DÉTAIL -->
+    <TitledPane fx:id="detailPane" text="Détail de l'ouvrage sélectionné"
+                expanded="false" styleClass="form-pane">
+        <GridPane hgap="20" vgap="8">
+            <padding><Insets top="15" right="15" bottom="15" left="15"/></padding>
+
+            <Label text="Titre :"       GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label fx:id="detailTitre"  GridPane.columnIndex="1" GridPane.rowIndex="0"
+                   styleClass="detail-value"/>
+
+            <Label text="Auteur :"      GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Label fx:id="detailAuteur" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                   styleClass="detail-value"/>
+
+            <Label text="ISBN :"        GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="detailIsbn"   GridPane.columnIndex="1" GridPane.rowIndex="2"
+                   styleClass="detail-value"/>
+
+            <Label text="Statut :"      GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label fx:id="detailStatut" GridPane.columnIndex="1" GridPane.rowIndex="3"
+                   styleClass="detail-value"/>
+
+            <Label text="Exemplaires disponibles :"
+                   GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Label fx:id="detailDispo"  GridPane.columnIndex="1" GridPane.rowIndex="4"
+                   styleClass="detail-value"/>
+
+            <Label text="Prochain retour :"
+                   GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Label fx:id="detailRetour" GridPane.columnIndex="1" GridPane.rowIndex="5"
+                   styleClass="detail-value"/>
+        </GridPane>
+    </TitledPane>
+
+</VBox>
