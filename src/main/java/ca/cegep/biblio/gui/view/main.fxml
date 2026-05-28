@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ca.cegep.biblio.gui.controller.MainController"
+            prefWidth="1200" prefHeight="800">
+
+    <!-- BARRE DU HAUT -->
+    <top>
+        <VBox spacing="0">
+            <!-- Titre -->
+            <HBox styleClass="header" alignment="CENTER_LEFT" spacing="20">
+                <padding><Insets top="15" right="20" bottom="15" left="20"/></padding>
+                <Label text="📚 Bibliothèque — Cégep" styleClass="header-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <VBox alignment="CENTER_RIGHT">
+                    <Label text="Emprunts totaux" styleClass="counter-label"/>
+                    <Label fx:id="compteurLabel" text="0" styleClass="counter-value"/>
+                </VBox>
+            </HBox>
+
+            <!-- Navigation -->
+            <HBox styleClass="navbar" spacing="5">
+                <padding><Insets top="8" right="20" bottom="8" left="20"/></padding>
+                <Button fx:id="btnLivres"    text="📖 Livres"     onAction="#ouvrirLivres"
+                        styleClass="nav-button"/>
+                <Button fx:id="btnUsagers"   text="👤 Usagers"    onAction="#ouvrirUsagers"
+                        styleClass="nav-button"/>
+                <Button fx:id="btnEmprunts"  text="🔄 Emprunts"   onAction="#ouvrirEmprunts"
+                        styleClass="nav-button"/>
+                <Button fx:id="btnRecherche" text="🔍 Recherche"  onAction="#ouvrirRecherche"
+                        styleClass="nav-button"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="💾 Sauvegarder" onAction="#sauvegarder"
+                        styleClass="nav-button-save"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- CONTENU CENTRAL — chargé dynamiquement -->
+    <center>
+        <StackPane fx:id="contenuPrincipal" styleClass="main-content">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+        </StackPane>
+    </center>
+
+    <!-- PANNEAU DU BAS — exemplaires en réparation -->
+    <bottom>
+        <VBox styleClass="repair-panel" spacing="5">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="🔧 Exemplaires en réparation :" styleClass="repair-title"/>
+                <Label fx:id="nbReparationLabel" text="0" styleClass="repair-count"/>
+            </HBox>
+            <ListView fx:id="reparationListView" prefHeight="100"
+                      styleClass="repair-list"/>
+        </VBox>
+    </bottom>
+
+</BorderPane>
