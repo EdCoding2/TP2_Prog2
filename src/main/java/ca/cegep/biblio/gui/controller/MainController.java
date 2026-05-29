@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.StackPane;
@@ -75,8 +76,39 @@ public class MainController implements Initializable {
 
     @FXML
     private void sauvegarder() {
-        service.sauvegarderDonnees();
-        rafraichirInfos();
+        // Récupérer le service au moment du clic — évite le null
+        BibliothequeService s = App.getBibliothequeService();
+
+        if (s == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("❌ Service non disponible");
+            alert.setContentText("Le service de bibliothèque n'est pas initialisé.");
+            alert.showAndWait();
+            return;
+        }
+
+        try {
+            s.sauvegarderDonnees();
+
+            java.io.File fichier = new java.io.File("data/sauvegarde.json");
+            String chemin = fichier.getAbsolutePath();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Sauvegarde");
+            alert.setHeaderText("✅ Sauvegarde réussie");
+            alert.setContentText("Fichier enregistré ici :\n" + chemin);
+            alert.showAndWait();
+
+            rafraichirInfos();
+
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("❌ Échec de la sauvegarde");
+            alert.setContentText("Erreur : " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
     // -------------------------------------------------------------------------

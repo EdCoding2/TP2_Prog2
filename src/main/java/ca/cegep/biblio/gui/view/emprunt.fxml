@@ -44,10 +44,22 @@
                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                     <Label text="ISBN :"
-                           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <TextField fx:id="isbnEmpruntField" prefWidth="350"
-                               promptText="Entrer l'ISBN..."
-                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="4">
+                        <TextField fx:id="isbnEmpruntField"
+                                prefWidth="350"
+                                promptText="Ex: 978-001"
+                                onKeyReleased="#rechercherSuggestionsIsbn"/>
+
+                        <ListView fx:id="isbnSuggestionsListView"
+                                prefHeight="100"
+                                managed="false"
+                                visible="false"/>
+
+                        <Label text="💡 Entrez l'ISBN complet ou sélectionnez une suggestion."
+                            styleClass="hint-label"/>
+                    </VBox>
 
                     <Label text="Disponibilité :"
                            GridPane.columnIndex="0" GridPane.rowIndex="2"/>

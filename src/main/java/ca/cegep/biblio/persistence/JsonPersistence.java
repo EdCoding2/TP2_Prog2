@@ -3,8 +3,7 @@ package ca.cegep.biblio.persistence;
 import ca.cegep.biblio.model.*;
 import com.google.gson.*;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,24 +15,90 @@ public class JsonPersistence {
 
     public JsonPersistence() {
         this.gson = new GsonBuilder()
-                // Adaptateur pour LocalDate
-                .registerTypeAdapter(LocalDate.class, new JsonSerializer<LocalDate>() {
-                    @Override
-                    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
-                        return new JsonPrimitive(src.toString());
-                    }
-                })
-                .registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
-                    @Override
-                    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                            throws JsonParseException {
-                        return LocalDate.parse(json.getAsString());
-                    }
-                })
-                // Adaptateur pour le polymorphisme Usager
-                .registerTypeAdapter(Usager.class, new UsagerAdapter())
+                .registerTypeAdapter(LocalDate.class,
+                        (JsonSerializer<LocalDate>) (src, t, ctx) ->
+                                new JsonPrimitive(src.toString()))
+                .registerTypeAdapter(LocalDate.class,
+                        (JsonDeserializer<LocalDate>) (json, t, ctx) ->
+                                LocalDate.parse(json.getAsString()))
                 .setPrettyPrinting()
                 .create();
+    }
+
+    // -------------------------------------------------------------------------
+    // DTOs — objets plats sans références circulaires
+    // -------------------------------------------------------------------------
+
+    // DTO Exemplaire
+    private static class ExemplaireDto {
+        String idExemplaire, titre, auteur, isbn;
+        String statut, etatPhysique;
+        LocalDate dateDisponibilite;
+
+        static ExemplaireDto from(Exemplaire e) {
+            ExemplaireDto d  = new ExemplaireDto();
+            d.idExemplaire   = e.getIdExemplaire();
+            d.titre          = e.getTitre();
+            d.auteur         = e.getAuteur();
+            d.isbn           = e.getIsbn();
+            d.statut         = e.getStatut().name();
+            d.etatPhysique   = e.getEtatPhysique().name();
+            d.dateDisponibilite = e.getDateDisponibilite();
+            return d;
+        }
+
+        Exemplaire toModel() {
+            Exemplaire e = new Exemplaire(
+                    idExemplaire, titre, auteur, isbn,
+                    Statut.valueOf(statut),
+                    EtatPhysique.valueOf(etatPhysique)
+            );
+            e.setDateDisponibilite(dateDisponibilite);
+            return e;
+        }
+    }
+
+    // DTO Usager — pas de liste d'emprunts (évite la récursion)
+    private static class UsagerDto {
+        String id, nom, type;
+
+        static UsagerDto from(Usager u) {
+            UsagerDto d = new UsagerDto();
+            d.id   = u.getId();
+            d.nom  = u.getNom();
+            d.type = u.getClass().getSimpleName();
+            return d;
+        }
+
+        Usager toModel() {
+            return switch (type) {
+                case "Professeur" -> new Professeur(nom, id);
+                case "Visiteur"   -> new Visiteur(nom, id);
+                default           -> new Etudiant(nom, id);
+            };
+        }
+    }
+
+    // DTO Emprunt — stocke seulement les IDs (pas les objets complets)
+    private static class EmpruntDto {
+        String idExemplaire, idUsager;
+        LocalDate dateEmprunt, dateRetourPrevue;
+
+        static EmpruntDto from(Emprunt e) {
+            EmpruntDto d     = new EmpruntDto();
+            d.idExemplaire   = e.getExemplaire().getIdExemplaire();
+            d.idUsager       = e.getUsager().getId();
+            d.dateEmprunt    = e.getDateEmprunt();
+            d.dateRetourPrevue = e.getDateRetourPrevue();
+            return d;
+        }
+    }
+
+    // Conteneur JSON
+    private static class SaveFile {
+        List<ExemplaireDto> exemplaires = new ArrayList<>();
+        List<UsagerDto>     usagers     = new ArrayList<>();
+        List<EmpruntDto>    emprunts    = new ArrayList<>();
     }
 
     // -------------------------------------------------------------------------
@@ -41,17 +106,25 @@ public class JsonPersistence {
     // -------------------------------------------------------------------------
 
     public void sauvegarder(List<Exemplaire> exemplaires, List<Usager> usagers,
-                             List<Emprunt> emprunts, String cheminFichier) throws IOException {
-        DonneesJson donnees = new DonneesJson(exemplaires, usagers, emprunts);
-        String json = gson.toJson(donnees);
+                             List<Emprunt> emprunts, String cheminFichier)
+            throws IOException {
 
-        // Créer le dossier si inexistant
+        SaveFile save = new SaveFile();
+
+        for (Exemplaire e : exemplaires)
+            save.exemplaires.add(ExemplaireDto.from(e));
+
+        for (Usager u : usagers)
+            save.usagers.add(UsagerDto.from(u));
+
+        for (Emprunt e : emprunts)
+            save.emprunts.add(EmpruntDto.from(e));
+
         Path chemin = Paths.get(cheminFichier);
-        if (chemin.getParent() != null) {
+        if (chemin.getParent() != null)
             Files.createDirectories(chemin.getParent());
-        }
 
-        Files.writeString(chemin, json);
+        Files.writeString(chemin, gson.toJson(save));
     }
 
     // -------------------------------------------------------------------------
@@ -60,98 +133,65 @@ public class JsonPersistence {
 
     public DonneesJson charger(String cheminFichier) throws IOException {
         Path chemin = Paths.get(cheminFichier);
-
-        if (!Files.exists(chemin)) {
-            return null;
-        }
+        if (!Files.exists(chemin)) return null;
 
         String json = Files.readString(chemin);
-        DonneesJson donnees = gson.fromJson(json, DonneesJson.class);
+        SaveFile save = gson.fromJson(json, SaveFile.class);
+        if (save == null) return null;
 
-        // Reconstruire les références croisées Emprunt → Exemplaire et Emprunt → Usager
-        if (donnees != null && donnees.getEmprunts() != null) {
-            for (Emprunt emprunt : donnees.getEmprunts()) {
-                // Retrouver l'exemplaire par idExemplaire
-                Exemplaire ex = donnees.getExemplaires().stream()
-                        .filter(e -> e.getIdExemplaire().equals(
-                                emprunt.getExemplaire().getIdExemplaire()))
-                        .findFirst()
-                        .orElse(null);
+        // Reconstruire les modèles
+        List<Exemplaire> exemplaires = new ArrayList<>();
+        for (ExemplaireDto d : save.exemplaires)
+            exemplaires.add(d.toModel());
 
-                // Retrouver l'usager par id
-                Usager us = donnees.getUsagers().stream()
-                        .filter(u -> u.getId().equals(
-                                emprunt.getUsager().getId()))
-                        .findFirst()
-                        .orElse(null);
+        List<Usager> usagers = new ArrayList<>();
+        for (UsagerDto d : save.usagers)
+            usagers.add(d.toModel());
 
-                if (ex != null) emprunt.setExemplaire(ex);
-                if (us != null) {
-                    emprunt.setUsager(us);
-                    us.getEmpruntsEnCours().add(emprunt);
-                }
+        // Reconstruire les emprunts en résolvant les références par ID
+        List<Emprunt> emprunts = new ArrayList<>();
+        for (EmpruntDto d : save.emprunts) {
+            Exemplaire ex = exemplaires.stream()
+                    .filter(e -> e.getIdExemplaire().equals(d.idExemplaire))
+                    .findFirst().orElse(null);
+            Usager us = usagers.stream()
+                    .filter(u -> u.getId().equals(d.idUsager))
+                    .findFirst().orElse(null);
+
+            if (ex != null && us != null) {
+                Emprunt emprunt = new Emprunt(ex, us, d.dateEmprunt, d.dateRetourPrevue);
+                emprunts.add(emprunt);
+                // Reconstruire empruntsEnCours de l'usager
+                us.getEmpruntsEnCours().add(emprunt);
             }
         }
 
-        return donnees;
+        return new DonneesJson(exemplaires, usagers, emprunts);
     }
 
     // -------------------------------------------------------------------------
-    // Classe conteneur JSON
+    // Conteneur de retour
     // -------------------------------------------------------------------------
 
     public static class DonneesJson {
-        private List<Exemplaire> exemplaires;
-        private List<Usager> usagers;
-        private List<Emprunt> emprunts;
+        private final List<Exemplaire> exemplaires;
+        private final List<Usager>     usagers;
+        private final List<Emprunt>    emprunts;
 
-        public DonneesJson() {
-            this.exemplaires = new ArrayList<>();
-            this.usagers     = new ArrayList<>();
-            this.emprunts    = new ArrayList<>();
-        }
-
-        public DonneesJson(List<Exemplaire> exemplaires, List<Usager> usagers, List<Emprunt> emprunts) {
+        public DonneesJson(List<Exemplaire> exemplaires,
+                           List<Usager> usagers,
+                           List<Emprunt> emprunts) {
             this.exemplaires = exemplaires;
             this.usagers     = usagers;
             this.emprunts    = emprunts;
         }
 
+        public DonneesJson() {
+            this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+        }
+
         public List<Exemplaire> getExemplaires() { return exemplaires; }
-        public List<Usager> getUsagers()         { return usagers; }
-        public List<Emprunt> getEmprunts()       { return emprunts; }
-    }
-
-    // -------------------------------------------------------------------------
-    // Adaptateur polymorphisme Usager (Etudiant / Professeur / Visiteur)
-    // -------------------------------------------------------------------------
-
-    private static class UsagerAdapter implements JsonDeserializer<Usager>, JsonSerializer<Usager> {
-
-        private static final String TYPE_FIELD = "typeUsager";
-
-        @Override
-        public JsonElement serialize(Usager src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonObject obj = context.serialize(src, src.getClass()).getAsJsonObject();
-            obj.addProperty(TYPE_FIELD, src.getClass().getSimpleName());
-            return obj;
-        }
-
-        @Override
-        public Usager deserialize(JsonElement json, Type typeOfT,
-                                  JsonDeserializationContext context) throws JsonParseException {
-            JsonObject obj = json.getAsJsonObject();
-            String type = obj.get(TYPE_FIELD).getAsString();
-
-            if ("Etudiant".equals(type)) {
-                return context.deserialize(obj, Etudiant.class);
-            } else if ("Professeur".equals(type)) {
-                return context.deserialize(obj, Professeur.class);
-            } else if ("Visiteur".equals(type)) {
-                return context.deserialize(obj, Visiteur.class);
-            } else {
-                throw new JsonParseException("Type usager inconnu : " + type);
-            }
-        }
+        public List<Usager>     getUsagers()     { return usagers; }
+        public List<Emprunt>    getEmprunts()    { return emprunts; }
     }
 }

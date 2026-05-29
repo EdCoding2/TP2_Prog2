@@ -1,14 +1,27 @@
 {
   "exemplaires": [
     {
-      "idExemplaire": "EX-CC5E92F0",
-      "titre": "eduarfsamoi",
-      "auteur": "s affs moi",
-      "isbn": "2134sfmoi",
-      "statut": "DISPONIBLE",
-      "etatPhysique": "NEUF"
+      "idExemplaire": "EX-94849B78",
+      "titre": "test5",
+      "auteur": "Moi",
+      "isbn": "987-900",
+      "statut": "EMPRUNTE",
+      "etatPhysique": "BON"
     }
   ],
-  "usagers": [],
-  "emprunts": []
+  "usagers": [
+    {
+      "id": "US-D28B5295",
+      "nom": "Moi",
+      "type": "Etudiant"
+    }
+  ],
+  "emprunts": [
+    {
+      "idExemplaire": "EX-94849B78",
+      "idUsager": "US-D28B5295",
+      "dateEmprunt": "2026-05-28",
+      "dateRetourPrevue": "2026-06-17"
+    }
+  ]
 }

@@ -97,6 +97,15 @@ public class LivreController implements Initializable {
         Exemplaire selectionne = livreTableView.getSelectionModel().getSelectedItem();
         if (selectionne == null) {
             messageLabel.setText("⚠️ Veuillez sélectionner un exemplaire.");
+            messageLabel.setStyle("-fx-text-fill: #fab387;");
+            return;
+        }
+
+        // Vérifier si emprunté AVANT la confirmation
+        if (selectionne.getStatut() == Statut.EMPRUNTE) {
+            messageLabel.setText("❌ Impossible — \"" + selectionne.getTitre()
+                    + "\" est actuellement emprunté.");
+            messageLabel.setStyle("-fx-text-fill: #f38ba8;");
             return;
         }
 
@@ -110,8 +119,10 @@ public class LivreController implements Initializable {
                 if (ok) {
                     rafraichirTableau();
                     messageLabel.setText("✅ Exemplaire supprimé.");
+                    messageLabel.setStyle("-fx-text-fill: #a6e3a1;");
                 } else {
-                    messageLabel.setText("❌ Impossible — exemplaire actuellement emprunté.");
+                    messageLabel.setText("❌ Suppression refusée.");
+                    messageLabel.setStyle("-fx-text-fill: #f38ba8;");
                 }
             }
         });
@@ -151,6 +162,9 @@ public class LivreController implements Initializable {
         rafraichirTableau();
         formulairePane.setExpanded(false);
         viderFormulaire();
+        // AJOUTER ces deux lignes après rafraichirTableau()
+        livreTableView.refresh();
+        livreTableView.getSelectionModel().clearSelection();
     }
 
     @FXML

@@ -111,6 +111,15 @@ public class UsagerController implements Initializable {
             return;
         }
 
+        // Vérifier emprunts actifs AVANT la confirmation
+        if (!selectionne.getEmpruntsEnCours().isEmpty()) {
+            messageLabel.setText("❌ Impossible — \"" + selectionne.getNom()
+                    + "\" a " + selectionne.getEmpruntsEnCours().size()
+                    + " emprunt(s) actif(s).");
+            messageLabel.setStyle("-fx-text-fill: #f38ba8;");
+            return;
+        }
+
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
                 "Supprimer l'usager \"" + selectionne.getNom() + "\" ?",
                 ButtonType.YES, ButtonType.NO);
@@ -121,8 +130,10 @@ public class UsagerController implements Initializable {
                 if (ok) {
                     rafraichirTableau();
                     messageLabel.setText("✅ Usager supprimé.");
+                    messageLabel.setStyle("-fx-text-fill: #a6e3a1;");
                 } else {
-                    messageLabel.setText("❌ Impossible — l'usager a des emprunts actifs.");
+                    messageLabel.setText("❌ Suppression refusée.");
+                    messageLabel.setStyle("-fx-text-fill: #f38ba8;");
                 }
             }
         });

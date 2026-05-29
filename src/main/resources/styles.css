@@ -462,3 +462,9 @@
     -fx-background-color: #11111b;
     -fx-text-fill: #6c7086;
 }
+
+.hint-label {
+    -fx-text-fill: #6c7086;
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+}

@@ -41,17 +41,18 @@ public class App extends Application {
 
     @Override
     public void stop() {
-        // Sauvegarde automatique à la fermeture
-        if (bibliothequeService != null) {
-            bibliothequeService.sauvegarderDonnees();
+        try {
+            if (bibliothequeService != null) {
+                bibliothequeService.sauvegarderDonnees();
+                System.out.println("Sauvegarde effectuée à la fermeture.");
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur sauvegarde fermeture : " + e.getMessage());
         }
 
-        // Arrêter proprement le scheduler
         if (repairScheduler != null) {
             repairScheduler.arreter();
         }
-
-        System.out.println("Application fermée proprement.");
     }
 
     // Getter statique — accessible depuis tous les contrôleurs

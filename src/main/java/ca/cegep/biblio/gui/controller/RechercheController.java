@@ -91,13 +91,17 @@ public class RechercheController implements Initializable {
         // ISBN sont empruntés
         colRetourProche.setCellValueFactory(c -> {
             String isbn = c.getValue().getIsbn();
-            boolean tousEmpruntes = service.rechercherParISBN(isbn).stream()
-                    .allMatch(e -> e.getStatut() != Statut.DISPONIBLE);
 
-            if (tousEmpruntes) {
+            // Vérifier s'il existe au moins un exemplaire disponible
+            boolean auMoinsUnDispo = service.rechercherParISBN(isbn).stream()
+                    .anyMatch(e -> e.getStatut() == Statut.DISPONIBLE);
+
+            if (!auMoinsUnDispo) {
+                // Chercher dans les emprunts actifs
                 Optional<LocalDate> date = service.getDateRetourPlusProche(isbn);
-                return new SimpleStringProperty(
-                        date.map(LocalDate::toString).orElse("—"));
+                if (date.isPresent()) {
+                    return new SimpleStringProperty("📅 " + date.get().toString());
+                }
             }
             return new SimpleStringProperty("—");
         });

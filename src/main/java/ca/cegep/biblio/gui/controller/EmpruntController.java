@@ -57,7 +57,8 @@ public class EmpruntController implements Initializable {
         remplirComboBoxes();
         rafraichirEmpruntsEnCours();
         rafraichirRetards();
-
+        configurerSelectionSuggestion();
+        
         // Vérifier disponibilité en temps réel quand ISBN change
         isbnEmpruntField.textProperty().addListener((obs, ancien, nouveau) ->
                 verifierDisponibilite(nouveau.trim()));
@@ -228,6 +229,58 @@ public class EmpruntController implements Initializable {
     private void rafraichirRetards() {
         retardTableView.setItems(
                 FXCollections.observableArrayList(service.getEmpruntsEnRetard()));
+    }
+
+    // -------------------------------------------------------------------------
+    // 
+    // -------------------------------------------------------------------------
+
+    @FXML private ListView<String> isbnSuggestionsListView;
+
+    @FXML
+    private void rechercherSuggestionsIsbn() {
+        String terme = isbnEmpruntField.getText().trim();
+
+        if (terme.length() < 2) {
+            isbnSuggestionsListView.setVisible(false);
+            isbnSuggestionsListView.setManaged(false);
+            verifierDisponibilite(terme);
+            return;
+        }
+
+        // Trouver les ISBNs qui contiennent le terme
+        List<String> suggestions = service.getExemplaires().stream()
+                .map(Exemplaire::getIsbn)
+                .filter(isbn -> isbn.toLowerCase().contains(terme.toLowerCase()))
+                .distinct()
+                .sorted()
+                .limit(6)
+                .collect(java.util.stream.Collectors.toList());
+
+        if (suggestions.isEmpty()) {
+            isbnSuggestionsListView.setVisible(false);
+            isbnSuggestionsListView.setManaged(false);
+        } else {
+            isbnSuggestionsListView.setItems(
+                    FXCollections.observableArrayList(suggestions));
+            isbnSuggestionsListView.setVisible(true);
+            isbnSuggestionsListView.setManaged(true);
+        }
+
+        verifierDisponibilite(terme);
+    }
+
+    private void configurerSelectionSuggestion() {
+        isbnSuggestionsListView.setOnMouseClicked(event -> {
+            String selectionne = isbnSuggestionsListView
+                    .getSelectionModel().getSelectedItem();
+            if (selectionne != null) {
+                isbnEmpruntField.setText(selectionne);
+                isbnSuggestionsListView.setVisible(false);
+                isbnSuggestionsListView.setManaged(false);
+                verifierDisponibilite(selectionne);
+            }
+        });
     }
 
     // -------------------------------------------------------------------------

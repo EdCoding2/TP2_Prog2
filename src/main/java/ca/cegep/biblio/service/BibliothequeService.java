@@ -19,7 +19,18 @@ public class BibliothequeService {
     private final RechercheService rechercheService;
     private final JsonPersistence jsonPersistence;
 
-    private static final String CHEMIN_JSON = "data/sauvegarde.json";
+    
+    private static final String CHEMIN_JSON = construireChemin();
+
+    private static String construireChemin() {
+        // Cherche le dossier data/ depuis la racine du projet
+        java.io.File dossierData = new java.io.File("data");
+        if (!dossierData.exists()) {
+            dossierData.mkdirs();
+        }
+        return dossierData.getAbsolutePath()
+                + java.io.File.separator + "sauvegarde.json";
+    }
 
     public BibliothequeService() {
         this.exemplaires    = new ArrayList<>();
